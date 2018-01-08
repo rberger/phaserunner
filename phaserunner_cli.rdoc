@@ -1,0 +1,5 @@
+= phaserunner_cli
+
+Generate this with
+    phaserunner_cli rdoc
+After you have described your command line interface
