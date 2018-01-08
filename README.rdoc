@@ -1,6 +1,22 @@
-= phaserunner_cli
+= NAME
+    phaserunner_cli - Read values from the Grin PhaseRunner Controller for logging
 
-Describe your project here
+= SYNOPSIS
+    phaserunner_cli [global options] command [command options] [arguments...]
+
+= VERSION
+    0.0.1
+
+= GLOBAL OPTIONS
+    -f, --flagname=The name of the argument - Describe some flag here (default: the default)
+    --help                                  - Show this message
+    -s, --[no-]switch                       - Describe some switch here
+    --version                               - Display the program version
+
+= COMMANDS
+    help          - Shows a list of commands or help for one command
+    read_bulk     - Read a bulk sparse set of registers with multiple addresses
+    read_register - Read a single or multiple adjacent registers from and address
 
 :include:phaserunner_cli.rdoc
 

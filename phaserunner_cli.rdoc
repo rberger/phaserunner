@@ -1,4 +1,4 @@
-== phaserunner_cli - Describe your application here
+== phaserunner_cli - Read values from the Grin PhaseRunner Controller for logging
 
 v0.0.1
 
@@ -36,12 +36,12 @@ List commands one per line, to assist with shell completion
 
 
 
-==== Command: <tt>read_bulk  Describe arguments to read_bulk here</tt>
-Describe read_bulk here
+==== Command: <tt>read_bulk  address0 [address1 ... addressn]</tt>
+Read a bulk sparse set of registers with multiple addresses
 
 
-==== Command: <tt>read_register  Describe arguments to read_register here</tt>
-Describe read_register here
+==== Command: <tt>read_register  register_address</tt>
+Read a single or multiple adjacent registers from and address
 
 
 ===== Options
