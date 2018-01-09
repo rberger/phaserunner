@@ -1,7 +1,8 @@
-require "rmodbus"
-require "json"
+require 'rmodbus'
+require 'json'
 
-module RmodbusCli
+module PhaserunnerCli
+  # Methods for communicating with the Modbus interface to the Phaserunner
   class Modbus
     # Contains the Grin Phaesrunner Modbus Dictionary
     # @params [Hash<Integer, Hash>] dict The Dictionary with a key for each register address
@@ -50,10 +51,10 @@ module RmodbusCli
     end
 
     def read_value(start_address, count)
-      puts("Reading from #{dict[start_address][:name]} scale: #{dict[start_address][:scale]} units: #{dict[start_address][:units]}")
+      #puts("Reading from #{dict[start_address][:name]} scale: #{dict[start_address][:scale]} units: #{dict[start_address][:units]}")
       cl = ::ModBus::RTUClient.new(tty, baudrate)
       cl.with_slave(slave_id) do |slave|
-        puts "Foo #{slave.read_holding_registers(start_address, count).inspect}"
+        slave.read_holding_registers(start_address, count)
       end
     end
   end

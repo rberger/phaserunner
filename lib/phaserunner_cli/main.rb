@@ -15,50 +15,56 @@ module PhaserunnerCli
 
       subcommand_option_handling :normal
       arguments :strict
+      sort_help :manually
 
-      desc 'Describe some switch here'
-      switch [:s,:switch]
+      desc 'Serial (USB) device'
+      default_value '/dev/ttyUSB0'
+      arg 'tty'
+      flag [:t, :tty]
 
-      desc 'Describe some flag here'
-      default_value 'the default'
-      arg_name 'The name of the argument'
-      flag [:f,:flagname]
+      desc 'Serial port baudrate'
+      default_value 115200
+      arg 'baudrate'
+      flag [:b, :baudrate]
+
+      desc 'Modbus slave ID'
+      default_value 1
+      arg 'slave_id'
+      flag [:s, :slave_id]
+
+      desc 'Path to json file that contains Grin Modbus Dictionary'
+      default_value File.expand_path('../../../BODm.json', __FILE__)
+      arg 'dictionary_file'
+      flag [:d, :dictionary_file]
 
       desc 'Read a single or multiple adjacent registers from and address'
       arg_name 'register_address'
-      command :read_register do |c|
-        c.desc 'Describe a switch to read_register'
-        c.switch :s
+      command :read_register do |read_register|
+        read_register.desc 'Number of registers to read starting at the Arg Address'
+        read_register.default_value 1
+        read_register.flag [:c, :count]
 
-        c.desc 'Describe a flag to read_register'
-        c.default_value 'default'
-        c.flag :f
-        c.action do |global_options,options,args|
-
-          # Your command logic here
-          
-          # If you have any errors, just raise them
-          # raise "that command made no sense"
-
-          puts "read_register command ran"
+        read_register.arg 'address'
+        read_register.action do |global_options, options, args|
+          modbus.read_value(args.first, options[:count])
         end
       end
 
       desc 'Read a bulk sparse set of registers with multiple addresses'
       arg_name 'address0 [address1 ... addressn]'
-      command :read_bulk do |c|
-        c.action do |global_options,options,args|
+      command :read_bulk do |read_bulk|
+        read_bulk.action do |global_options, options, args|
           puts "read_bulk command ran"
         end
       end
 
-      pre do |global,command,options,args|
+      pre do |global, command, options, args|
         # Pre logic here
         # Return true to proceed; false to abort and not call the
         # chosen command
         # Use skips_pre before a command to skip this block
         # on that command only
-        true
+        @modbus = Modbus.new(global)
       end
 
       post do |global,command,options,args|
