@@ -8,10 +8,13 @@
     0.0.1
 
 == GLOBAL OPTIONS
-    -f, --flagname=The name of the argument - Describe some flag here (default: the default)
-    --help                                  - Show this message
-    -s, --[no-]switch                       - Describe some switch here
-    --version                               - Display the program version
+    -t, --tty=arg             - Serial (USB) device (default: /dev/ttyUSB0)
+    -b, --baudrate=arg        - Serial port baudrate (default: 115200)
+    -s, --slave_id=arg        - Modbus slave ID (default: 1)
+    -d, --dictionary_file=arg - Path to json file that contains Grin Modbus Dictionary (default: /Users/rberger/odrive/IBD
+                                Google Drive/Trike/bike-pi/modbus/phaserunner_cli/BODm.json)
+    --version                 - Display the program version
+    --help                    - Show this message
 
 == COMMANDS
     help          - Shows a list of commands or help for one command

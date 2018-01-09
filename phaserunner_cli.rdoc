@@ -3,20 +3,36 @@
 v0.0.1
 
 === Global Options
-=== -f|--flagname The name of the argument
+=== -b|--baudrate arg
 
-Describe some flag here
+Serial port baudrate
 
-[Default Value] the default
+[Default Value] 115200
+
+
+=== -d|--dictionary_file arg
+
+Path to json file that contains Grin Modbus Dictionary
+
+[Default Value] /Users/rberger/odrive/IBD Google Drive/Trike/bike-pi/modbus/phaserunner_cli/BODm.json
+
+
+=== -s|--slave_id arg
+
+Modbus slave ID
+
+[Default Value] 1
+
+
+=== -t|--tty arg
+
+Serial (USB) device
+
+[Default Value] /dev/ttyUSB0
 
 
 === --help
 Show this message
-
-
-
-=== -s|--[no-]switch
-Describe some switch here
 
 
 
@@ -45,15 +61,10 @@ Read a single or multiple adjacent registers from and address
 
 
 ===== Options
-===== -f arg
+===== -c|--count arg
 
-Describe a flag to read_register
+Number of registers to read starting at the Arg Address
 
-[Default Value] default
-
-
-===== -s
-Describe a switch to read_register
-
+[Default Value] 1
 
 
