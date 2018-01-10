@@ -1,0 +1,70 @@
+== phaserunner - Read values from the Grin PhaseRunner Controller for logging
+
+v0.0.1
+
+=== Global Options
+=== -b|--baudrate arg
+
+Serial port baudrate
+
+[Default Value] 115200
+
+
+=== -d|--dictionary_file arg
+
+Path to json file that contains Grin Modbus Dictionary
+
+[Default Value] /Users/rberger/odrive/IBD Google Drive/Trike/bike-pi/modbus/phaserunner/BODm.json
+
+
+=== -s|--slave_id arg
+
+Modbus slave ID
+
+[Default Value] 1
+
+
+=== -t|--tty arg
+
+Serial (USB) device
+
+[Default Value] /dev/ttyUSB0
+
+
+=== --help
+Show this message
+
+
+
+=== --version
+Display the program version
+
+
+
+=== Commands
+==== Command: <tt>help  command</tt>
+Shows a list of commands or help for one command
+
+Gets help for the application or its commands. Can also list the commands in a way helpful to creating a bash-style completion function
+===== Options
+===== -c
+List commands one per line, to assist with shell completion
+
+
+
+==== Command: <tt>read_bulk  address0 [address1 ... addressn]</tt>
+Read a bulk sparse set of registers with multiple addresses
+
+
+==== Command: <tt>read_register  register_address</tt>
+Read a single or multiple adjacent registers from and address
+
+
+===== Options
+===== -c|--count arg
+
+Number of registers to read starting at the Arg Address
+
+[Default Value] 1
+
+
