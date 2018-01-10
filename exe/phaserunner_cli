@@ -1,5 +1,0 @@
-#!/usr/bin/env ruby
-require 'phaserunner_cli'
-
-cli = PhaserunnerCli::Cli.new
-cli.main

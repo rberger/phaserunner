@@ -1,7 +1,7 @@
 require 'rmodbus'
 require 'json'
 
-module PhaserunnerCli
+module Phaserunner
   # Methods for communicating with the Modbus interface to the Phaserunner
   class Modbus
     # Contains the Grin Phaesrunner Modbus Dictionary
@@ -33,21 +33,6 @@ module PhaserunnerCli
       end
 
       @dict = clean_dict(JSON.parse(File.read(dictionary_file)))
-    end
-
-    # Make the Dictionary an pleasant hash with Integer top keys (addresses) and
-    # symbols for other keys
-    # @params [Hash<String, Hash>] original_dict The Dictionary as it came from JSON
-    def clean_dict(original_dict)
-      original_dict.each_with_object({}) do |(k, v), memo|
-        memo[k.to_i] = clean_node(v)
-      end
-    end
-
-    def clean_node(node)
-      node.each_with_object({}) do |(k, v), memo|
-        memo[k.to_sym] = v
-      end
     end
 
     def read_value(start_address, count)

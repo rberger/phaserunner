@@ -2,7 +2,7 @@ require 'gli'
 require 'json'
 require 'pp'
 
-module PhaserunnerCli
+module Phaserunner
 
   class Cli
 
@@ -11,7 +11,7 @@ module PhaserunnerCli
     def main
       program_desc 'Read values from the Grin PhaseRunner Controller for logging'
 
-      version PhaserunnerCli::VERSION
+      version Phaserunner::VERSION
 
       subcommand_option_handling :normal
       arguments :strict

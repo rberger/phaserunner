@@ -1,8 +1,8 @@
 == NAME
-    phaserunner_cli - Read values from the Grin PhaseRunner Controller for logging
+    phaserunner - Read values from the Grin PhaseRunner Controller for logging
 
 == SYNOPSIS
-    phaserunner_cli [global options] command [command options] [arguments...]
+    phaserunner [global options] command [command options] [arguments...]
 
 == VERSION
     0.0.1
@@ -12,7 +12,7 @@
     -b, --baudrate=arg        - Serial port baudrate (default: 115200)
     -s, --slave_id=arg        - Modbus slave ID (default: 1)
     -d, --dictionary_file=arg - Path to json file that contains Grin Modbus Dictionary (default: /Users/rberger/odrive/IBD
-                                Google Drive/Trike/bike-pi/modbus/phaserunner_cli/BODm.json)
+                                Google Drive/Trike/bike-pi/modbus/phaserunner/BODm.json)
     --version                 - Display the program version
     --help                    - Show this message
 
@@ -21,4 +21,4 @@
     read_bulk     - Read a bulk sparse set of registers with multiple addresses
     read_register - Read a single or multiple adjacent registers from and address
 
-:include:phaserunner_cli.rdoc
+:include:phaserunner.rdoc
