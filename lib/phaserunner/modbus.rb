@@ -17,6 +17,11 @@ module Phaserunner
     # @option dict [Stirng] :type Further info on how to interpret the value
     attr_reader :dict
 
+    # Returns the path to the default BODm.json file
+    def self.default_file_path
+      File.expand_path('../../../BODm.json', __FILE__)
+    end
+
     # New Modbus
     #  Converts the opts hash into Class Instance Variables (attr_readers)
     #  Reads the JSON Grin Phaserunner Modbus Dictionary into a Hash
@@ -35,7 +40,7 @@ module Phaserunner
       @dict = JSON.parse(File.read(dictionary_file))
     end
 
-    def read_value(start_address, count)
+    def read_raw_range(start_address, count)
       #puts("Reading from #{dict[start_address][:name]} scale: #{dict[start_address][:scale]} units: #{dict[start_address][:units]}")
       cl = ::ModBus::RTUClient.new(tty, baudrate)
       cl.with_slave(slave_id) do |slave|

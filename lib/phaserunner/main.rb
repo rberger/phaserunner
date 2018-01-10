@@ -6,6 +6,7 @@ module Phaserunner
 
   class Cli
     attr_reader :modbus
+    attr_reader :dict
 
     include GLI::App
 
@@ -34,9 +35,14 @@ module Phaserunner
       flag [:s, :slave_id]
 
       desc 'Path to json file that contains Grin Modbus Dictionary'
-      default_value File.expand_path('../../../BODm.json', __FILE__)
+      default_value Modbus.default_file_path
       arg 'dictionary_file'
       flag [:d, :dictionary_file]
+
+      desc 'Loop the command n times'
+      default_value 10
+      arg 'loop', :optional
+      flag [:l, :loop]
 
       desc 'Read a single or multiple adjacent registers from and address'
       arg_name 'register_address'
@@ -47,7 +53,12 @@ module Phaserunner
 
         read_register.arg 'address'
         read_register.action do |global_options, options, args|
-          modbus.read_value(args.first, options[:count])
+          address = args.first
+          node = dict[address]
+          puts "Address: #{address} #{node[:name]} scale: #{node[:scale]} Units: #{node[:units]}}}"
+          [0..options[:loop]].each do |i|
+            puts modbus.read_range(address, options[:count])
+          end
         end
       end
 
@@ -66,6 +77,7 @@ module Phaserunner
         # Use skips_pre before a command to skip this block
         # on that command only
         @modbus = Modbus.new(global)
+        @dict = @modbus.dict
       end
 
       post do |global,command,options,args|
