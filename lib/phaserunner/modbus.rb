@@ -32,7 +32,7 @@ module Phaserunner
         instance_variable_set("@#{name}", value)
       end
 
-      @dict = clean_dict(JSON.parse(File.read(dictionary_file)))
+      @dict = JSON.parse(File.read(dictionary_file))
     end
 
     def read_value(start_address, count)

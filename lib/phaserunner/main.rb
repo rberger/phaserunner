@@ -5,6 +5,7 @@ require 'pp'
 module Phaserunner
 
   class Cli
+    attr_reader :modbus
 
     include GLI::App
 
