@@ -26,24 +26,23 @@ Gem::Specification.new do |spec|
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
   end
-  spec.bindir        = "exe"
+  spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
-  spec.require_paths = ["lib"]
+  spec.require_paths = ['lib']
 
   spec.has_rdoc = true
-  spec.extra_rdoc_files = ['README.rdoc','phaserunner.rdoc']
+  spec.extra_rdoc_files = ['README.rdoc', 'phaserunner.rdoc']
   spec.rdoc_options << '--title' << 'phaserunner' << '--main' << 'README.rdoc' << '-ri'
 
-  spec.add_runtime_dependency "gli","~> 2.17"
-  spec.add_runtime_dependency "rmodbus",  "~> 1.3"
-  spec.add_runtime_dependency "serialport",    "~> 1.3"
-  spec.add_runtime_dependency gem 'asi_bod', '~> 0.1.3'
+  spec.add_runtime_dependency 'gli', '~> 2.17'
+  spec.add_runtime_dependency 'rmodbus', '~> 1.3'
+  spec.add_runtime_dependency 'serialport', '~> 1.3'
+  spec.add_runtime_dependency 'asi_bod', '~> 0.1.3'
 
-  spec.add_development_dependency "bundler", "~> 1.16"
-  spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "rdoc"
-  spec.add_development_dependency "aruba", "~> 0.14"
-  spec.add_development_dependency "yard", "~> 0.9"
-
+  spec.add_development_dependency 'bundler', '~> 1.16'
+  spec.add_development_dependency 'rake', '~> 10.0'
+  spec.add_development_dependency 'rspec', '~> 3.0'
+  spec.add_development_dependency 'rdoc'
+  spec.add_development_dependency 'aruba', '~> 0.14'
+  spec.add_development_dependency 'yard', '~> 0.9'
 end
