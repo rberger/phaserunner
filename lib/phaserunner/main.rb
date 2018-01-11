@@ -8,6 +8,7 @@ module Phaserunner
     attr_reader :modbus
     attr_reader :dict
     attr_reader :loop
+    attr_reader :phaserunnerOutFd
 
     include GLI::App
 
@@ -69,7 +70,17 @@ module Phaserunner
       arg_name 'address0 [address1 ... addressn]'
       command :read_bulk do |read_bulk|
         read_bulk.action do |global_options, options, args|
-          puts "read_bulk command ran"
+          addresses =[259,262,265,266,270,281,260,273,328,334,263,311,312,313,269,277,258]
+          hdr = %W(Timestamp,#{modbus.bulk_addresses_header(addresses).join(",")})
+          puts hdr
+          phaserunnerOutFd.puts hdr
+
+          (0..loop).each do |i| 
+            str = %W(#{Time.now.utc.round(10).iso8601(6)},#{modbus.read_addresses(addresses).join(",")})
+            puts str
+            phaserunnerOutFd.puts str
+            sleep 1
+          end
         end
       end
 
@@ -82,6 +93,7 @@ module Phaserunner
         @modbus = Modbus.new(global)
         @dict = @modbus.dict
         @loop = global[:loop]
+        @phaserunnerOutFd = File.open("phaserunner.#{Time.now.utc.iso8601}.log", 'w')
       end
 
       post do |global,command,options,args|

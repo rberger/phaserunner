@@ -59,6 +59,18 @@ module Phaserunner
         "#{dict[address][:name]} (#{dict[address][:units]})"
       end
     end
+
+    def read_addresses(addresses)
+      addresses.map do |address|
+        read_raw_range(address, 1)
+      end
+    end
+
+    def bulk_addresses_header(addresses)
+      addresses.map do |address|
+        "#{dict[address][:name]} (#{dict[address][:units]})"
+      end
+    end
   end
 end
 
