@@ -50,10 +50,13 @@ module Phaserunner
       end
     end
 
+    def read_range(start_address, count)
+
+    end
     def range_address_header(start_address, count)
-      end_address = start_address + count
-      (start_address..end_address).map do |address|
-        dict[address][:name]
+      end_address = start_address + count 
+      (start_address...end_address).map do |address|
+        "#{dict[address][:name]} (#{dict[address][:units]})"
       end
     end
   end

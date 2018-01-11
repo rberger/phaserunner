@@ -58,9 +58,9 @@ module Phaserunner
           address = args[0].to_i
           count = args[1].to_i
           node = dict[address]
-          puts range_address_header(address, count).inspect
+          puts modbus.range_address_header(address, count).join(",")
           (0..loop).each do |i|
-            puts modbus.read_raw_range(address, count).inspect
+            puts modbus.read_raw_range(address, count).join(",")
           end
         end
       end
