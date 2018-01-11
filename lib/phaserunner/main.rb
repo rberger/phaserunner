@@ -58,9 +58,9 @@ module Phaserunner
           address = args[0].to_i
           count = args[1].to_i
           node = dict[address]
-          puts "loop: #{loop.inspect} Address: #{address} #{node[:name].inspect} scale: #{node[:scale.inspect]} Units: #{node[:units].inspect}"
-          [0..loop].each do |i|
-            puts modbus.read_raw_range(address, count)
+          puts range_address_header(address, count).inspect
+          (0..loop).each do |i|
+            puts modbus.read_raw_range(address, count).inspect
           end
         end
       end

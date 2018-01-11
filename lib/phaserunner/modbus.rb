@@ -49,6 +49,13 @@ module Phaserunner
         slave.read_holding_registers(start_address, count)
       end
     end
+
+    def range_address_header(start_address, count)
+      end_address = start_address + count
+      (start_address..end_address).map do |address|
+        dict[address][:name]
+      end
+    end
   end
 end
 
