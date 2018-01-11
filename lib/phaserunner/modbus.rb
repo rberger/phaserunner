@@ -1,5 +1,6 @@
 require 'rmodbus'
 require 'json'
+require 'asi_bod'
 
 module Phaserunner
   # Methods for communicating with the Modbus interface to the Phaserunner
@@ -19,7 +20,7 @@ module Phaserunner
 
     # Returns the path to the default BODm.json file
     def self.default_file_path
-      File.expand_path('../../../BODm.json', __FILE__)
+      AsiBod::Bod.default_file_path
     end
 
     # New Modbus
