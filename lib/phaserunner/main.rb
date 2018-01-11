@@ -53,11 +53,11 @@ module Phaserunner
 
         read_register.arg 'address'
         read_register.action do |global_options, options, args|
-          address = args.first
+          address = args.first.to_i
           node = dict[address]
-          puts "Address: #{address} #{node[:name]} scale: #{node[:scale]} Units: #{node[:units]}}}"
+          puts "Address: #{address} #{node[:name].inspect} scale: #{node[:scale.inspect]} Units: #{node[:units].inspect}"
           [0..options[:loop]].each do |i|
-            puts modbus.read_range(address, options[:count])
+            puts modbus.read_raw_range(address, options[:count])
           end
         end
       end

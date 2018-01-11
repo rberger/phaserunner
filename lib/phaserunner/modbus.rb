@@ -38,7 +38,8 @@ module Phaserunner
         instance_variable_set("@#{name}", value)
       end
 
-      @dict = JSON.parse(File.read(dictionary_file))
+      @bod = AsiBod::Bod.new(bod_file: dictionary_file)
+      @dict = @bod.hash_data
     end
 
     def read_raw_range(start_address, count)
