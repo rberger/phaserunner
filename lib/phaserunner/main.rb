@@ -7,6 +7,7 @@ module Phaserunner
   class Cli
     attr_reader :modbus
     attr_reader :dict
+    attr_reader :loop
 
     include GLI::App
 
@@ -42,7 +43,8 @@ module Phaserunner
       desc 'Loop the command n times'
       default_value 10
       arg 'loop', :optional
-      flag [:l, :loop]
+      flag [:l, :loop], type: Integer
+      # flag [:l, :loop], :desc => 'Loop the command n times', :type => Integer
 
       desc 'Read a single or multiple adjacent registers from and address'
       arg_name 'register_address'
@@ -53,11 +55,12 @@ module Phaserunner
 
         read_register.arg 'address'
         read_register.action do |global_options, options, args|
-          address = args.first.to_i
+          address = args[0].to_i
+          count = args[1].to_i
           node = dict[address]
-          puts "Address: #{address} #{node[:name].inspect} scale: #{node[:scale.inspect]} Units: #{node[:units].inspect}"
-          [0..options[:loop]].each do |i|
-            puts modbus.read_raw_range(address, options[:count])
+          puts "loop: #{loop.inspect} Address: #{address} #{node[:name].inspect} scale: #{node[:scale.inspect]} Units: #{node[:units].inspect}"
+          [0..loop].each do |i|
+            puts modbus.read_raw_range(address, count)
           end
         end
       end
@@ -78,6 +81,7 @@ module Phaserunner
         # on that command only
         @modbus = Modbus.new(global)
         @dict = @modbus.dict
+        @loop = global[:loop]
       end
 
       post do |global,command,options,args|
