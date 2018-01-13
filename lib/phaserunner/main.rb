@@ -70,13 +70,18 @@ module Phaserunner
       arg_name 'address0 [address1 ... addressn]'
       command :read_bulk do |read_bulk|
         read_bulk.action do |global_options, options, args|
-          addresses =[259,262,265,266,270,281,260,273,328,334,263,311,312,313,269,277,258]
-          hdr = %W(Timestamp,#{modbus.bulk_addresses_header(addresses).join(",")})
+          start_address = 258
+          count = 12
+          misc_addresses =[277,334]
+          header = modbus.bulk_log_header(start_address, count, misc_addresses)
+          data = modbus.bulk_log_data(start_address, count, misc_addresses)
+
+          hdr = %W(Timestamp,#{header.join(",")})
           puts hdr
           phaserunnerOutFd.puts hdr
 
           (0..loop).each do |i| 
-            str = %W(#{Time.now.utc.round(10).iso8601(6)},#{modbus.read_addresses(addresses).join(",")})
+            str = %W(#{Time.now.utc.round(10).iso8601(6)},#{data.join(",")})
             puts str
             phaserunnerOutFd.puts str
             sleep 1

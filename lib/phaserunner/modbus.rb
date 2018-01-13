@@ -71,6 +71,26 @@ module Phaserunner
         "#{dict[address][:name]} (#{dict[address][:units]})"
       end
     end
+
+    # More optimized data fetch. Gets an address range + misc individual addresses
+    # @param start_address [Integer] Initial address of the range
+    # @param count [Integer] Count of addresses in range
+    # @param misc_addresses [Array<Integer>] List of misc individual addresses
+    # @return [Array<Integer>] List of the register values in the order requested
+    def bulk_log_data(start_address, count, misc_addresses)
+      read_range(start_address, count) +
+        read_addresses(misc_addresses)
+    end
+
+    # Get the headers for the bulk_log data
+    # @param start_address [Integer] Initial address of the range
+    # @param count [Integer] Count of addresses in range
+    # @param misc_addresses [Array<Integer>] List of misc individual addresses
+    # @return [Array<String>] Array of the headers
+    def bulk_log_header(start_address, count, misc_addresses)
+      range_address_header(start_address, count) +
+        bulk_addresses_header(misc_addresses)
+    end
   end
 end
 
