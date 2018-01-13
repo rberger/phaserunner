@@ -93,7 +93,7 @@ module Phaserunner
         @modbus = Modbus.new(global)
         @dict = @modbus.dict
         @loop = global[:loop]
-        @phaserunnerOutFd = File.open("phaserunner.#{Time.now.utc.iso8601}.log", 'w')
+        @phaserunnerOutFd = File.open("phaserunner.#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}.csv", 'w')
       end
 
       post do |global,command,options,args|
