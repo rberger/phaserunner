@@ -66,8 +66,7 @@ module Phaserunner
         end
       end
 
-      desc 'Read a bulk sparse set of registers with multiple addresses'
-      arg_name 'address0 [address1 ... addressn]'
+      desc 'Read a range plus bulk sparse set of registers with multiple addresses'
       command :read_bulk do |read_bulk|
         read_bulk.action do |global_options, options, args|
           start_address = 258
@@ -84,7 +83,7 @@ module Phaserunner
             str = %W(#{Time.now.utc.round(10).iso8601(6)},#{data.join(",")})
             puts str
             phaserunnerOutFd.puts str
-            sleep 1
+            sleep 0.2
           end
         end
       end
