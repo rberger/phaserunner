@@ -50,9 +50,6 @@ module Phaserunner
       end
     end
 
-    def read_range(start_address, count)
-
-    end
     def range_address_header(start_address, count)
       end_address = start_address + count 
       (start_address...end_address).map do |address|
@@ -78,8 +75,7 @@ module Phaserunner
     # @param misc_addresses [Array<Integer>] List of misc individual addresses
     # @return [Array<Integer>] List of the register values in the order requested
     def bulk_log_data(start_address, count, misc_addresses)
-      read_range(start_address, count) +
-        read_addresses(misc_addresses)
+      read_raw_range(start_address, count) + read_addresses(misc_addresses)
     end
 
     # Get the headers for the bulk_log data
