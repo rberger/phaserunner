@@ -5,6 +5,13 @@ require 'asi_bod'
 module Phaserunner
   # Methods for communicating with the Modbus interface to the Phaserunner
   class Modbus
+    # The registers of interest for logging
+    # First a range
+    REGISTERS_START_ADDRESS = 258
+    REGISTERS_COUNT = 12
+    # Sparse Registers of interest
+    REGISTERS_MISC =[277,334]
+
     # Contains the Grin Phaesrunner Modbus Dictionary
     # @params [Hash<Integer, Hash>] dict The Dictionary with a key for each register address
     # @option dict [String] :name Name of the register
@@ -17,6 +24,10 @@ module Phaserunner
     # @option dict [String] :units The units for the value
     # @option dict [Stirng] :type Further info on how to interpret the value
     attr_reader :dict
+
+    attr_reader :registers_start_address
+    attr_reader :registers_count
+    attr_reader :registers_misc
 
     # Returns the path to the default BODm.json file
     def self.default_file_path
@@ -36,6 +47,9 @@ module Phaserunner
       opts.each_pair do |name, value|
         self.class.send(:attr_accessor, name)
         instance_variable_set("@#{name}", value)
+        @registers_start_address = REGISTERS_START_ADDRESS
+        @registers_count = REGISTERS_COUNT
+        @registers_misc = REGISTERS_MISC
       end
 
       @bod = AsiBod::Bod.new(bod_file: dictionary_file)
@@ -70,20 +84,20 @@ module Phaserunner
     end
 
     # More optimized data fetch. Gets an address range + misc individual addresses
-    # @param start_address [Integer] Initial address of the range
-    # @param count [Integer] Count of addresses in range
-    # @param misc_addresses [Array<Integer>] List of misc individual addresses
+    # @param start_address [Integer] Initial address of the range. Optional, has a default
+    # @param count [Integer] Count of addresses in range. Optional, has a default
+    # @param misc_addresses [Array<Integer>] List of misc individual addresses. Optional, has a default
     # @return [Array<Integer>] List of the register values in the order requested
-    def bulk_log_data(start_address, count, misc_addresses)
+    def bulk_log_data(start_address=registers_start_address, count=registers_count, misc_addresses=registers_misc)
       read_raw_range(start_address, count) + read_addresses(misc_addresses)
     end
 
     # Get the headers for the bulk_log data
-    # @param start_address [Integer] Initial address of the range
-    # @param count [Integer] Count of addresses in range
-    # @param misc_addresses [Array<Integer>] List of misc individual addresses
+    # @param start_address [Integer] Initial address of the range. Optional, has a default
+    # @param count [Integer] Count of addresses in range. Optional, has a default
+    # @param misc_addresses [Array<Integer>] List of misc individual addresses.  Optional, has a default
     # @return [Array<String>] Array of the headers
-    def bulk_log_header(start_address, count, misc_addresses)
+    def bulk_log_header(start_address=registers_start_address, count=registers_count, misc_addresses=registers_misc)
       range_address_header(start_address, count) +
         bulk_addresses_header(misc_addresses)
     end

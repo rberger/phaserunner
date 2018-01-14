@@ -3,17 +3,23 @@ require 'json'
 require 'pp'
 
 module Phaserunner
+  # Handle Ctl-C exit
+  trap "SIGINT" do
+    puts "Exiting"
+    exit 130
+  end
 
   class Cli
     attr_reader :modbus
     attr_reader :dict
     attr_reader :loop
+    attr_reader :quiet
     attr_reader :phaserunnerOutFd
 
     include GLI::App
 
     def main
-      program_desc 'Read values from the Grin PhaseRunner Controller for logging'
+      program_desc 'Read values from the Grin PhaseRunner Controller primarily for logging'
 
       version Phaserunner::VERSION
 
@@ -42,10 +48,12 @@ module Phaserunner
       flag [:d, :dictionary_file]
 
       desc 'Loop the command n times'
-      default_value 10
+      default_value :forever
       arg 'loop', :optional
-      flag [:l, :loop], type: Integer
-      # flag [:l, :loop], :desc => 'Loop the command n times', :type => Integer
+      flag [:l, :loop]
+
+      desc 'Do not output to stdout'
+      switch [:q, :quiet]
 
       desc 'Read a single or multiple adjacent registers from and address'
       arg_name 'register_address'
@@ -59,33 +67,28 @@ module Phaserunner
           address = args[0].to_i
           count = args[1].to_i
           node = dict[address]
-          puts modbus.range_address_header(address, count).join(",")
+          puts modbus.range_address_header(address, count).join(",") unless quiet
           (0..loop).each do |i|
-            puts modbus.read_raw_range(address, count).join(",")
+            puts modbus.read_raw_range(address, count).join(",") unless quiet
           end
         end
       end
 
-      desc 'Logs a range plus bulk sparse set of registers with multiple addresses to stdout and file'
+      desc 'Logs interesting Phaserunner registers to stdout and file'
       long_desc %q(Logs interesting Phaserunner registers to stdout and a CSV file. File name in the form: phaserunner.#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}.csv)
       command :log do |log|
-        log.desc 'Do not output to stdout'
-        log.switch [:q, :quiet]
         log.action do |global_options, options, args|
-          quiet = options[:quiet]
-          start_address = 258
-          count = 12
-          misc_addresses =[277,334]
-          header = modbus.bulk_log_header(start_address, count, misc_addresses)
-          data = modbus.bulk_log_data(start_address, count, misc_addresses)
+          header = modbus.bulk_log_header
+          data = modbus.bulk_log_data
 
+          # Generate and output header line
           hdr = %Q(Timestamp,#{header.join(",")})
-          puts hdr if not quiet
+          puts hdr unless quiet
           phaserunnerOutFd.puts hdr
 
           (0..loop).each do |i| 
             str = %Q(#{Time.now.utc.round(10).iso8601(6)},#{data.join(",")})
-            puts str if not quiet
+            puts str unless quiet
             phaserunnerOutFd.puts str
             sleep 0.2
           end
@@ -100,7 +103,13 @@ module Phaserunner
         # on that command only
         @modbus = Modbus.new(global)
         @dict = @modbus.dict
-        @loop = global[:loop]
+        # Handle that loop can be :forever or an Integer
+        if global[:loop] == :forever
+          @loop = Float::INFINITY
+        else
+          @loop = global[:loop].to_i
+        end
+        @quiet = global[:quiet]
         @phaserunnerOutFd = File.open("phaserunner.#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}.csv", 'w')
       end
 
