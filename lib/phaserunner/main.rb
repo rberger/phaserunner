@@ -104,15 +104,15 @@ module Phaserunner
         # chosen command
         # Use skips_pre before a command to skip this block
         # on that command only
-        @modbus = Modbus.new(global)
-        @dict = @modbus.dict
+        @quiet = global[:quiet]
         # Handle that loop_count can be :forever or an Integer
         @loop_count = if global[:loop_count] == :forever
                         Float::INFINITY
                       else
                         global[:loop_count].to_i
                       end
-        @quiet = global[:quiet]
+        @modbus = Modbus.new(global)
+        @dict = @modbus.dict
       end
 
       post do |global,command,options,args|
