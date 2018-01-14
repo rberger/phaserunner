@@ -1,6 +1,6 @@
-== phaserunner - Read values from the Grin PhaseRunner Controller for logging
+== phaserunner - Read values from the Grin PhaseRunner Controller primarily for logging
 
-v0.1.0
+v0.1.4
 
 === Global Options
 === -b|--baudrate arg
@@ -17,11 +17,11 @@ Path to json file that contains Grin Modbus Dictionary
 [Default Value] /Users/rberger/.rvm/gems/ruby-2.4.1/gems/asi_bod-0.1.4/BODm.json
 
 
-=== -l|--loop arg
+=== -l|--loop_count arg
 
 Loop the command n times
 
-[Default Value] 10
+[Default Value] forever
 
 
 === -s|--slave_id arg
@@ -43,6 +43,11 @@ Show this message
 
 
 
+=== -q|--[no-]quiet
+Do not output to stdout
+
+
+
 === --version
 Display the program version
 
@@ -60,15 +65,9 @@ List commands one per line, to assist with shell completion
 
 
 ==== Command: <tt>log </tt>
-Logs a range plus bulk sparse set of registers with multiple addresses to stdout and file
+Logs interesting Phaserunner registers to stdout and file
 
 Logs interesting Phaserunner registers to stdout and a CSV file. File name in the form: phaserunner.#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}.csv
-===== Options
-===== -q|--[no-]quiet
-Do not output to stdout
-
-
-
 ==== Command: <tt>read_register  register_address</tt>
 Read a single or multiple adjacent registers from and address
 

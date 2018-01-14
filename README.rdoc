@@ -1,6 +1,8 @@
 == NAME
     phaserunner - Read values from the Grin PhaseRunner Controller for logging
 
+{<img src="https://badge.fury.io/rb/phaserunner.svg" alt="Gem Version" />}[https://badge.fury.io/rb/phaserunner]
+
 == SYNOPSIS
     phaserunner [global options] command [command options] [arguments...]
 
@@ -32,5 +34,10 @@
 
 === COMMAND OPTIONS
     -q, --[no-]quiet - Do not output to stdout
+
+== License and Copyright
+
+* Copyright (c) 2018 Robert J. Berger
+* License: MIT
 
 :include:phaserunner.rdoc
