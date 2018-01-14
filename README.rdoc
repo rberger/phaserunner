@@ -5,6 +5,7 @@
 
 == SYNOPSIS
     phaserunner [global options] command [command options] [arguments...]
+    phaserunner [global options] log [command options]
 
 == VERSION
     0.1.0
@@ -22,18 +23,6 @@
     help          - Shows a list of commands or help for one command
     read_register - Read a single or multiple adjacent registers from and address
     log           - Logs a range plus bulk sparse set of registers with multiple addresses to stdout and file
-
-=== NAME
-    log - Logs a range plus bulk sparse set of registers with multiple addresses to stdout and file
-
-=== SYNOPSIS
-    phaserunner [global options] log [command options]
-
-=== DESCRIPTION
-    Logs interesting Phaserunner registers to stdout and a CSV file. File name in the form: phaserunner.#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}.csv
-
-=== COMMAND OPTIONS
-    -q, --[no-]quiet - Do not output to stdout
 
 == License and Copyright
 
