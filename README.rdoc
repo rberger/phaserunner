@@ -24,6 +24,24 @@
     read_register - Read a single or multiple adjacent registers from and address
     log           - Logs a range plus bulk sparse set of registers with multiple addresses to stdout and file
 
+=== Attributes that are Logged
+
+* Timestamp
+* Phaserunner Faults ()
+* Phaserunner Controller Temperature (deg Celsius)
+* Phaserunner Vehicle Speed (Km/hour)
+* Phaserunner Motor Temperature (deg Celsius)
+* Phaserunner Motor Current (Amps)
+* Phaserunner Motor RPM (RPM)
+* Phaserunner Motor Speed (% of rated rpm)
+* Phaserunner Battery Voltage (Volts)
+* Phaserunner Battery Current (Amps)
+* Phaserunner Battery State of Charge (%)
+* Phaserunner Battery Power (Watts)
+* Phaserunner Last Fault ()
+* Phaserunner Warnings ()
+* Phaserunner Motor Input Power (W)
+
 == License and Copyright
 
 * Copyright (c) 2018 Robert J. Berger
