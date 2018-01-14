@@ -75,12 +75,12 @@ module Phaserunner
           header = modbus.bulk_log_header(start_address, count, misc_addresses)
           data = modbus.bulk_log_data(start_address, count, misc_addresses)
 
-          hdr = %W(Timestamp,#{header.join(",")})
+          hdr = %Q(Timestamp,#{header.join(",")})
           puts hdr
           phaserunnerOutFd.puts hdr
 
           (0..loop).each do |i| 
-            str = %W(#{Time.now.utc.round(10).iso8601(6)},#{data.join(",")})
+            str = %Q(#{Time.now.utc.round(10).iso8601(6)},#{data.join(",")})
             puts str
             phaserunnerOutFd.puts str
             sleep 0.2
