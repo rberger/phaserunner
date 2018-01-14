@@ -11,7 +11,7 @@ module Phaserunner
       baudrate: 115200,
       slave_id: 1,
       dictionary_file: default_file_path,
-      :loop =>  :forever,
+      loop_count: :forever,
       quiet: false,
       registers_start_address: 258,
       registers_count: 12,
@@ -22,7 +22,7 @@ module Phaserunner
     attr_reader :baudrate
     attr_reader :slave_id
     attr_reader :dictionary_file
-    attr_reader :loop
+    attr_reader :loop_count
     attr_reader :quiet
 
     # The registers of interest for logging
@@ -106,7 +106,9 @@ module Phaserunner
     # @param count [Integer] Count of addresses in range. Optional, has a default
     # @param misc_addresses [Array<Integer>] List of misc individual addresses. Optional, has a default
     # @return [Array<Integer>] List of the register values in the order requested
-    def bulk_log_data(start_address=registers_start_address, count=registers_count, misc_addresses=registers_misc)
+    def bulk_log_data(start_address = registers_start_address,
+                      count = registers_count,
+                      misc_addresses = registers_misc)
       read_raw_range(start_address, count) + read_addresses(misc_addresses)
     end
 
@@ -115,10 +117,11 @@ module Phaserunner
     # @param count [Integer] Count of addresses in range. Optional, has a default
     # @param misc_addresses [Array<Integer>] List of misc individual addresses.  Optional, has a default
     # @return [Array<String>] Array of the headers
-    def bulk_log_header(start_address=registers_start_address, count=registers_count, misc_addresses=registers_misc)
+    def bulk_log_header(start_address = registers_start_address,
+                        count = registers_count,
+                        misc_addresses = registers_misc)
       range_address_header(start_address, count) +
         bulk_addresses_header(misc_addresses)
     end
   end
 end
-

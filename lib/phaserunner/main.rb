@@ -9,15 +9,16 @@ module Phaserunner
     exit 130
   end
 
+  # Handle the CLI
   class Cli
     attr_reader :modbus
     attr_reader :dict
-    attr_reader :loop
+    attr_reader :loop_count
     attr_reader :quiet
-    attr_reader :phaserunnerOutFd
 
     include GLI::App
 
+    # Does all the CLI work
     def main
       program_desc 'Read values from the Grin PhaseRunner Controller primarily for logging'
 
@@ -49,8 +50,8 @@ module Phaserunner
 
       desc 'Loop the command n times'
       default_value :forever
-      arg 'loop', :optional
-      flag [:l, :loop]
+      arg 'loop_count', :optional
+      flag [:l, :loop_count]
 
       desc 'Do not output to stdout'
       switch [:q, :quiet]
@@ -68,7 +69,7 @@ module Phaserunner
           count = args[1].to_i
           node = dict[address]
           puts modbus.range_address_header(address, count).join(",") unless quiet
-          (0..loop).each do |i|
+          (0..loop_count).each do |i|
             puts modbus.read_raw_range(address, count).join(",") unless quiet
           end
         end
@@ -78,18 +79,20 @@ module Phaserunner
       long_desc %q(Logs interesting Phaserunner registers to stdout and a CSV file. File name in the form: phaserunner.#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}.csv)
       command :log do |log|
         log.action do |global_options, options, args|
+          filename = "phaserunner.#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}.csv"
+          output_fd = File.open(filename, 'w')
           header = modbus.bulk_log_header
           data = modbus.bulk_log_data
 
           # Generate and output header line
           hdr = %Q(Timestamp,#{header.join(",")})
           puts hdr unless quiet
-          phaserunnerOutFd.puts hdr
+          output_fd.puts hdr
 
-          (0..loop).each do |i| 
+          (0..loop_count).each do |i| 
             str = %Q(#{Time.now.utc.round(10).iso8601(6)},#{data.join(",")})
             puts str unless quiet
-            phaserunnerOutFd.puts str
+            output_fd.puts str
             sleep 0.2
           end
         end
@@ -103,14 +106,13 @@ module Phaserunner
         # on that command only
         @modbus = Modbus.new(global)
         @dict = @modbus.dict
-        # Handle that loop can be :forever or an Integer
-        if global[:loop] == :forever
-          @loop = Float::INFINITY
-        else
-          @loop = global[:loop].to_i
-        end
+        # Handle that loop_count can be :forever or an Integer
+        @loop_count = if global[:loop_count] == :forever
+                        Float::INFINITY
+                      else
+                        global[:loop_count].to_i
+                      end
         @quiet = global[:quiet]
-        @phaserunnerOutFd = File.open("phaserunner.#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}.csv", 'w')
       end
 
       post do |global,command,options,args|
