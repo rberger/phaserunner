@@ -6,6 +6,11 @@ module Phaserunner
   # Methods for communicating with the Modbus interface to the Phaserunner
   class Modbus
 
+    # Returns the path to the default BODm.json file
+    def self.default_file_path
+      AsiBod::Bod.default_file_path
+    end
+
     DEFAULTS = {
       tty: '/dev/ttyUSB0',
       baudrate: 115200,
@@ -46,11 +51,6 @@ module Phaserunner
     attr_reader :dict
 
     attr_reader :bod
-
-    # Returns the path to the default BODm.json file
-    def self.default_file_path
-      AsiBod::Bod.default_file_path
-    end
 
     # New Modbus
     #  Converts the opts hash into Class Instance Variables (attr_readers)
