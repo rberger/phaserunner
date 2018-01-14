@@ -5,12 +5,32 @@ require 'asi_bod'
 module Phaserunner
   # Methods for communicating with the Modbus interface to the Phaserunner
   class Modbus
+
+    DEFAULTS = {
+      tty: '/dev/ttyUSB0',
+      baudrate: 115200,
+      slave_id: 1,
+      dictionary_file: default_file_path,
+      :loop =>  :forever,
+      quiet: false,
+      registers_start_address: 258,
+      registers_count: 12,
+      registers_misc: [277,334]
+    }
+
+    attr_reader :tty
+    attr_reader :baudrate
+    attr_reader :slave_id
+    attr_reader :dictionary_file
+    attr_reader :loop
+    attr_reader :quiet
+
     # The registers of interest for logging
     # First a range
-    REGISTERS_START_ADDRESS = 258
-    REGISTERS_COUNT = 12
+    attr_reader :registers_start_address
+    attr_reader :registers_count
     # Sparse Registers of interest
-    REGISTERS_MISC =[277,334]
+    attr_reader :registers_misc
 
     # Contains the Grin Phaesrunner Modbus Dictionary
     # @params [Hash<Integer, Hash>] dict The Dictionary with a key for each register address
@@ -25,9 +45,7 @@ module Phaserunner
     # @option dict [Stirng] :type Further info on how to interpret the value
     attr_reader :dict
 
-    attr_reader :registers_start_address
-    attr_reader :registers_count
-    attr_reader :registers_misc
+    attr_reader :bod
 
     # Returns the path to the default BODm.json file
     def self.default_file_path
@@ -39,25 +57,25 @@ module Phaserunner
     #  Reads the JSON Grin Phaserunner Modbus Dictionary into a Hash
     # @params opts [Hash] comes from the CLI
     def initialize(opts)
+      # Start with defaults and allow input args to override them
+      final_opts = DEFAULTS.merge opts
+
       # Converts each key of the opts hash from the CLI into individual class attr_readers.
       # So they are now available to the rest of this Class as instance variables.
       # The key of the hash becomes the name of the instance variable.
       # They are available to all the methods of this class
       # See https://stackoverflow.com/a/7527916/38841
-      opts.each_pair do |name, value|
+      final_opts.each_pair do |name, value|
         self.class.send(:attr_accessor, name)
         instance_variable_set("@#{name}", value)
-        @registers_start_address = REGISTERS_START_ADDRESS
-        @registers_count = REGISTERS_COUNT
-        @registers_misc = REGISTERS_MISC
       end
 
+      # A few other Instance Variables
       @bod = AsiBod::Bod.new(bod_file: dictionary_file)
       @dict = @bod.hash_data
     end
 
     def read_raw_range(start_address, count)
-      #puts("Reading from #{dict[start_address][:name]} scale: #{dict[start_address][:scale]} units: #{dict[start_address][:units]}")
       cl = ::ModBus::RTUClient.new(tty, baudrate)
       cl.with_slave(slave_id) do |slave|
         slave.read_holding_registers(start_address, count)
