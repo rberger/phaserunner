@@ -5,20 +5,32 @@
     phaserunner [global options] command [command options] [arguments...]
 
 == VERSION
-    0.0.1
+    0.1.0
 
 == GLOBAL OPTIONS
     -t, --tty=arg             - Serial (USB) device (default: /dev/ttyUSB0)
     -b, --baudrate=arg        - Serial port baudrate (default: 115200)
     -s, --slave_id=arg        - Modbus slave ID (default: 1)
-    -d, --dictionary_file=arg - Path to json file that contains Grin Modbus Dictionary (default: /Users/rberger/odrive/IBD
-                                Google Drive/Trike/bike-pi/modbus/phaserunner/BODm.json)
+    -d, --dictionary_file=arg - Path to json file that contains Grin Modbus Dictionary (default: /Users/rberger/.rvm/gems/ruby-2.4.1/gems/asi_bod-0.1.4/BODm.json)
+    -l, --loop=arg            - Loop the command n times (default: 10)
     --version                 - Display the program version
     --help                    - Show this message
 
 == COMMANDS
     help          - Shows a list of commands or help for one command
-    read_bulk     - Read a bulk sparse set of registers with multiple addresses
     read_register - Read a single or multiple adjacent registers from and address
+    log           - Logs a range plus bulk sparse set of registers with multiple addresses to stdout and file
+
+=== NAME
+    log - Logs a range plus bulk sparse set of registers with multiple addresses to stdout and file
+
+=== SYNOPSIS
+    phaserunner [global options] log [command options]
+
+=== DESCRIPTION
+    Logs interesting Phaserunner registers to stdout and a CSV file. File name in the form: phaserunner.#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}.csv
+
+=== COMMAND OPTIONS
+    -q, --[no-]quiet - Do not output to stdout
 
 :include:phaserunner.rdoc

@@ -66,9 +66,13 @@ module Phaserunner
         end
       end
 
-      desc 'Read a range plus bulk sparse set of registers with multiple addresses'
-      command :read_bulk do |read_bulk|
-        read_bulk.action do |global_options, options, args|
+      desc 'Logs a range plus bulk sparse set of registers with multiple addresses to stdout and file'
+      long_desc %q(Logs interesting Phaserunner registers to stdout and a CSV file. File name in the form: phaserunner.#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}.csv)
+      command :log do |log|
+        log.desc 'Do not output to stdout'
+        log.switch [:q, :quiet]
+        log.action do |global_options, options, args|
+          quiet = options[:quiet]
           start_address = 258
           count = 12
           misc_addresses =[277,334]
@@ -76,12 +80,12 @@ module Phaserunner
           data = modbus.bulk_log_data(start_address, count, misc_addresses)
 
           hdr = %Q(Timestamp,#{header.join(",")})
-          puts hdr
+          puts hdr if not quiet
           phaserunnerOutFd.puts hdr
 
           (0..loop).each do |i| 
             str = %Q(#{Time.now.utc.round(10).iso8601(6)},#{data.join(",")})
-            puts str
+            puts str if not quiet
             phaserunnerOutFd.puts str
             sleep 0.2
           end
