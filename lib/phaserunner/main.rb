@@ -15,6 +15,7 @@ module Phaserunner
     attr_reader :dict
     attr_reader :loop_count
     attr_reader :quiet
+    attr_reader :no_scale
 
     include GLI::App
 
@@ -52,6 +53,9 @@ module Phaserunner
       default_value :forever
       arg 'loop_count', :optional
       flag [:l, :loop_count]
+
+      desc 'Do not scale the data from the phaserunner using the scale values from the dict'
+      switch [:no_scale]
 
       desc 'Do not output to stdout'
       switch [:q, :quiet]

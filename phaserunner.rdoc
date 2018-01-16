@@ -1,6 +1,6 @@
 == phaserunner - Read values from the Grin PhaseRunner Controller primarily for logging
 
-v0.1.4
+v0.1.6
 
 === Global Options
 === -b|--baudrate arg
@@ -14,7 +14,7 @@ Serial port baudrate
 
 Path to json file that contains Grin Modbus Dictionary
 
-[Default Value] /Users/rberger/.rvm/gems/ruby-2.4.1/gems/asi_bod-0.1.4/BODm.json
+[Default Value] /Users/rberger/.rvm/gems/ruby-2.4.1/gems/asi_bod-0.1.5/BODm.json
 
 
 === -l|--loop_count arg
@@ -40,6 +40,11 @@ Serial (USB) device
 
 === --help
 Show this message
+
+
+
+=== --[no-]no_scale
+Do not scale the data from the phaserunner using the scale values from the dict
 
 
 

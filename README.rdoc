@@ -14,9 +14,11 @@
     -t, --tty=arg             - Serial (USB) device (default: /dev/ttyUSB0)
     -b, --baudrate=arg        - Serial port baudrate (default: 115200)
     -s, --slave_id=arg        - Modbus slave ID (default: 1)
-    -d, --dictionary_file=arg - Path to json file that contains Grin Modbus Dictionary (default: /Users/rberger/.rvm/gems/ruby-2.4.1/gems/asi_bod-0.1.4/BODm.json)
-    -l, --loop=arg            - Loop the command n times (default: 10)
+    -d, --dictionary_file=arg - Path to json file that contains Grin Modbus Dictionary (default: /Users/rberger/.rvm/gems/ruby-2.4.1/gems/asi_bod-0.1.5/BODm.json)
+    -l, --loop_count=arg      - Loop the command n times (default: forever)
     --version                 - Display the program version
+    --[no-]no_scale           - Do not scale the data from the phaserunner using the scale values from the dict
+    -q, --[no-]quiet          - Do not output to stdout
     --help                    - Show this message
 
 == COMMANDS
@@ -41,6 +43,8 @@
 * Phaserunner Last Fault ()
 * Phaserunner Warnings ()
 * Phaserunner Motor Input Power (W)
+
+Will scale the raw values of the registers by the scaling value specified in the BOD dictionary unless --no-no-scale is set
 
 == License and Copyright
 

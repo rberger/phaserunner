@@ -18,6 +18,7 @@ module Phaserunner
       dictionary_file: default_file_path,
       loop_count: :forever,
       quiet: false,
+      no_scale: false,
       registers_start_address: 258,
       registers_count: 12,
       registers_misc: [277,334]
@@ -29,6 +30,9 @@ module Phaserunner
     attr_reader :dictionary_file
     attr_reader :loop_count
     attr_reader :quiet
+
+    # If set, the read_register will not apply the scale to the raw register data
+    attr_reader :no_scale
 
     # The registers of interest for logging
     # First a range
@@ -75,10 +79,38 @@ module Phaserunner
       @dict = @bod.hash_data
     end
 
-    def read_raw_range(start_address, count)
+    def convert_to_signed_binary(binary)
+      binary_int = binary.to_i
+      if binary_int >= 2**15
+        binary_int - 2**16
+      else
+        binary_int
+      end
+    end
+
+    # Read a range of registers from the Phaserunner modbus
+    #   Ensures that it wraps the signed 16bit register values to a proper signed Ruby Integer
+    #   Obeys the no_scale parameter set in the initializer.
+    # @param start_address [Integer] the starting address of register[s] to read
+    # @param count [Integer] number of contiguous registers to read. Defaults to 1
+    # @return [Array] 
+    def read_registers(start_address, count=1)
       cl = ::ModBus::RTUClient.new(tty, baudrate)
       cl.with_slave(slave_id) do |slave|
-        slave.read_holding_registers(start_address, count)
+        slave.read_holding_registers(start_address, count).map.with_index do |register, idx|
+          binary_register = convert_to_signed_binary(register)
+          unless no_scale
+            address = start_address + idx
+            begin
+              scale = FLOAT(dict[address][:scale])
+              binary_register / scale
+            rescue
+              binary_register
+            end
+          else
+            binary_register
+          end
+        end
       end
     end
 
@@ -91,7 +123,7 @@ module Phaserunner
 
     def read_addresses(addresses)
       addresses.map do |address|
-        read_raw_range(address, 1)
+        read_registers(address, 1)
       end
     end
 
@@ -109,7 +141,7 @@ module Phaserunner
     def bulk_log_data(start_address = registers_start_address,
                       count = registers_count,
                       misc_addresses = registers_misc)
-      read_raw_range(start_address, count) + read_addresses(misc_addresses)
+      read_registers(start_address, count) + read_addresses(misc_addresses)
     end
 
     # Get the headers for the bulk_log data
