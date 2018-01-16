@@ -20,7 +20,7 @@ module Phaserunner
       quiet: false,
       no_scale: false,
       registers_start_address: 258,
-      registers_count: 12,
+      registers_count: 13,
       registers_misc: [277,334]
     }
 
