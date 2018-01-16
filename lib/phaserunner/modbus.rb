@@ -21,7 +21,7 @@ module Phaserunner
       no_scale: false,
       registers_start_address: 258,
       registers_count: 13,
-      registers_misc: [277,334]
+      registers_misc: [277,325,334]
     }
 
     attr_reader :tty
