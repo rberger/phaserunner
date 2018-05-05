@@ -19,8 +19,8 @@ module Phaserunner
       loop_count: :forever,
       quiet: false,
       registers_start_address: 258,
-      registers_count: 12,
-      registers_misc: [277,334]
+      registers_count: 15,
+      registers_misc: [276, 277, 334]
     }
 
     attr_reader :tty
