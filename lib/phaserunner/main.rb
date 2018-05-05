@@ -82,7 +82,6 @@ module Phaserunner
           filename = "phaserunner.#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}.csv"
           output_fd = File.open(filename, 'w')
           header = modbus.bulk_log_header
-          data = modbus.bulk_log_data
 
           # Generate and output header line
           hdr = %Q(Timestamp,#{header.join(",")})
@@ -90,6 +89,7 @@ module Phaserunner
           output_fd.puts hdr
 
           (0..loop_count).each do |i| 
+            data = modbus.bulk_log_data
             str = %Q(#{Time.now.utc.round(10).iso8601(6)},#{data.join(",")})
             puts str unless quiet
             output_fd.puts str
