@@ -119,7 +119,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/rberge
 
 ### Code of Conduct in Contriubing
 
-This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the  [Contributor Code of Conduct](CODE_OF_CONDUCT.md).
+This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the  [Contributor Code of Conduct](CODE-OF-CONDUCT.md).
 
 ## Versioning
 
