@@ -114,9 +114,12 @@ gem install phaserunner
 
 ## Contributing
 
-## Code of Conduct in Contriubing
+Bug reports and pull requests are welcome on GitHub at https://github.com/rberger/rmodbus_cli.
 
-Please read [Code of Conduct](CODE_OF_CONDUCT.md) for details on a sensible code of conduct.
+
+### Code of Conduct in Contriubing
+
+This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the  [Contributor Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Versioning
 
