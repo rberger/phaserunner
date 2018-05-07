@@ -114,7 +114,7 @@ gem install phaserunner
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/rberger/rmodbus_cli.
+Bug reports and pull requests are welcome on GitHub at https://github.com/rberger/phaserunner.
 
 
 ### Code of Conduct in Contriubing
