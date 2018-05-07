@@ -6,10 +6,20 @@ module Phaserunner
   # Methods for communicating with the Modbus interface to the Phaserunner
   class Modbus
 
+    # Struct to represent a run length encode set of registers
+    RegistersRunLength = Struct.new(:start, :count)
+
     # Returns the path to the default BODm.json file
     def self.default_file_path
       AsiBod::Bod.default_file_path
     end
+
+    # Build up an array of RegistersRunLength structs that represent the ranges
+    # of registers to log
+    register_list = [RegistersRunLength.new(258, 18)]
+    register_list << RegistersRunLength.new(276, 2)
+    register_list << RegistersRunLength.new(282, 6)
+    register_list << RegistersRunLength.new(334, 4)
 
     DEFAULTS = {
       tty: '/dev/ttyUSB0',
@@ -18,6 +28,7 @@ module Phaserunner
       dictionary_file: default_file_path,
       loop_count: :forever,
       quiet: false,
+      register_list: register_list,
       registers_start_address: 258,
       registers_count: 15,
       registers_misc: [276, 277, 334]
@@ -31,11 +42,10 @@ module Phaserunner
     attr_reader :quiet
 
     # The registers of interest for logging
-    # First a range
-    attr_reader :registers_start_address
-    attr_reader :registers_count
-    # Sparse Registers of interest
-    attr_reader :registers_misc
+    # @paramds [Array<RegistersRunLength>] register_list
+    # @option register_list [Integer] :start Starting register Index
+    # @option register_list [Integer] :count Number of registers to return
+    attr_reader :register_list
 
     # Contains the Grin Phaesrunner Modbus Dictionary
     # @params [Hash<Integer, Hash>] dict The Dictionary with a key for each register address
@@ -101,27 +111,22 @@ module Phaserunner
       end
     end
 
-    # More optimized data fetch. Gets an address range + misc individual addresses
-    # @param start_address [Integer] Initial address of the range. Optional, has a default
-    # @param count [Integer] Count of addresses in range. Optional, has a default
-    # @param misc_addresses [Array<Integer>] List of misc individual addresses. Optional, has a default
+    # More optimized data fetch. Gets an array of address range structs
+    # @param register_list [Array<RegistersRunLength] Register ranges to log. Optional, has a default
     # @return [Array<Integer>] List of the register values in the order requested
-    def bulk_log_data(start_address = registers_start_address,
-                      count = registers_count,
-                      misc_addresses = registers_misc)
-      read_raw_range(start_address, count) + read_addresses(misc_addresses)
+    def bulk_log_data(registers = registers_list)
+      registers.map do |reg|
+        read_raw_range(reg.start, reg.count)
+      end
     end
 
     # Get the headers for the bulk_log data
-    # @param start_address [Integer] Initial address of the range. Optional, has a default
-    # @param count [Integer] Count of addresses in range. Optional, has a default
-    # @param misc_addresses [Array<Integer>] List of misc individual addresses.  Optional, has a default
+    # @param register_list [Array<RegistersRunLength] Register ranges to log. Optional, has a default
     # @return [Array<String>] Array of the headers
-    def bulk_log_header(start_address = registers_start_address,
-                        count = registers_count,
-                        misc_addresses = registers_misc)
-      range_address_header(start_address, count) +
-        bulk_addresses_header(misc_addresses)
+    def bulk_log_header(registers = registers_list)
+      registers.map do |reg|
+        range_address_header(reg.start, reg.count)
+      end
     end
   end
 end
