@@ -114,7 +114,7 @@ module Phaserunner
     # More optimized data fetch. Gets an array of address range structs
     # @param register_list [Array<RegistersRunLength] Register ranges to log. Optional, has a default
     # @return [Array<Integer>] List of the register values in the order requested
-    def bulk_log_data(registers = registers_list)
+    def bulk_log_data(registers = register_list)
       registers.map do |reg|
         read_raw_range(reg.start, reg.count)
       end
@@ -123,7 +123,7 @@ module Phaserunner
     # Get the headers for the bulk_log data
     # @param register_list [Array<RegistersRunLength] Register ranges to log. Optional, has a default
     # @return [Array<String>] Array of the headers
-    def bulk_log_header(registers = registers_list)
+    def bulk_log_header(registers = register_list)
       registers.map do |reg|
         range_address_header(reg.start, reg.count)
       end
