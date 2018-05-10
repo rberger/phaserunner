@@ -2,6 +2,14 @@ require 'rmodbus'
 require 'json'
 require 'asi_bod'
 
+# Add mechanism to convert Integers from modbus into signed integers
+class Integer
+  def to_signed(bits)
+    mask = (1 << (bits - 1))
+    (self & ~mask) - (self & mask)
+  end
+end
+
 module Phaserunner
   # Methods for communicating with the Modbus interface to the Phaserunner
   class Modbus
@@ -28,10 +36,7 @@ module Phaserunner
       dictionary_file: default_file_path,
       loop_count: :forever,
       quiet: false,
-      register_list: register_list,
-      registers_start_address: 258,
-      registers_count: 15,
-      registers_misc: [276, 277, 334]
+      register_list: register_list
     }
 
     attr_reader :tty
@@ -92,10 +97,36 @@ module Phaserunner
       end
     end
 
+    def read_scaled_range(start_address, count)
+      data = read_raw_range(start_address, count)
+      data.map.with_index do |val, index| 
+        address = index + start_address
+        if dict[address][:type] == "independent"
+          value = val.to_signed(16) / dict[address][:scale]
+          value
+        elsif dict[address][:type].downcase == "bit vector"
+          value = val.to_s(2)
+        else
+          value = val
+        end
+        value
+      end
+
+    end
     def range_address_header(start_address, count)
       end_address = start_address + count 
       (start_address...end_address).map do |address|
-        "#{dict[address][:name]} (#{dict[address][:units]})"
+        units = case dict[address][:type].downcase
+                when "bit vector"
+                  "Flags"
+                when "enum"
+                  "enum"
+                when "dependent"
+                  "Unscaled #{dict[address][:units]}"
+                else
+                  dict[address][:units]
+                end
+        "#{dict[address][:name]} (#{units})"
       end
     end
 
@@ -116,8 +147,8 @@ module Phaserunner
     # @return [Array<Integer>] List of the register values in the order requested
     def bulk_log_data(registers = register_list)
       registers.map do |reg|
-        read_raw_range(reg.start, reg.count)
-      end
+        read_scaled_range(reg.start, reg.count)
+      end.flatten
     end
 
     # Get the headers for the bulk_log data
@@ -126,7 +157,7 @@ module Phaserunner
     def bulk_log_header(registers = register_list)
       registers.map do |reg|
         range_address_header(reg.start, reg.count)
-      end
+      end.flatten
     end
   end
 end
